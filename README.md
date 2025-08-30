@@ -8,12 +8,12 @@ We begin by testing the **Gauss-Markov assumptions** to assess whether Ordinary 
 
 ## Variables and Data Sources
 
-- **Bitcoin (BTC/USD)**  
-- **XAU/USD** – Gold Spot Price in US Dollars  
-- **S&P500 (SPX)** – US stock market index  
-- **Federal Funds Effective Rate (FEDFUNDS)** – US interest rate ([FRED](https://fred.stlouisfed.org/series/FEDFUNDS))  
-- **US Dollar Index (DXY)** – strength of USD relative to a basket of currencies  
-- **CPI-U (All Urban Consumers, All Items)** – US Consumer Price Index ([FRED](https://fred.stlouisfed.org/series/CPIAUCSL))  
+- **Bitcoin (BTC/USD)** – [Investing.com](https://www.investing.com)  
+- **XAU/USD (Gold)** – [Investing.com](https://www.investing.com)  
+- **S&P500 (SPX)** – [Investing.com](https://www.investing.com)  
+- **US Dollar Index (DXY)** – [Investing.com](https://www.investing.com)  
+- **Federal Funds Effective Rate (FEDFUNDS)** – [FRED](https://fred.stlouisfed.org/series/FEDFUNDS)  
+- **CPI-U (All Urban Consumers, All Items)** – [U.S. Bureau of Labor Statistics (BLS)](https://www.bls.gov/cpi/)    
 
 **Data coverage:**  
 - Period: **2015M01 – 2025M07**  
