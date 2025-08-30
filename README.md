@@ -1,8 +1,8 @@
 # Gauss-Markov-BTC-Analysis
 
-This project explores the econometric and machine learning modeling of **Bitcoin (BTC/USD)** using key macro-financial variables.  
-We test the **Gauss-Markov assumptions** (linearity, homoskedasticity, no autocorrelation, no perfect multicollinearity, and normality of residuals) to verify when OLS estimators satisfy the **BLUE (Best Linear Unbiased Estimator)** properties.  
-Additionally, we apply **Random Forest regression** and **Partial Dependence Plots (PDP/ICE)** to capture non-linear relationships and compare the results with classical OLS.
+This project combines **econometric methods** and **machine learning approaches** to analyze the relationship between **Bitcoin (BTC/USD)** and key macro-financial variables.  
+
+We begin by testing the **Gauss-Markov assumptions** to assess whether Ordinary Least Squares (OLS) estimators can be considered **BLUE (Best Linear Unbiased Estimators)**. When these conditions fail, we extend the analysis with **Random Forest regression**, **Partial Dependence Plots (PDP/ICE)**, and additional time-series correlation methods.  
 
 ---
 
@@ -11,43 +11,65 @@ Additionally, we apply **Random Forest regression** and **Partial Dependence Plo
 - **Bitcoin (BTC/USD)**  
 - **XAU/USD** – Gold Spot Price in US Dollars  
 - **S&P500 (SPX)** – US stock market index  
-- **Federal Funds Effective Rate (FEDFUNDS)** – US interest rate (FRED)  
+- **Federal Funds Effective Rate (FEDFUNDS)** – US interest rate ([FRED](https://fred.stlouisfed.org/series/FEDFUNDS))  
 - **US Dollar Index (DXY)** – strength of USD relative to a basket of currencies  
-- **CPI-U (All Urban Consumers, All Items)** – US Consumer Price Index (FRED)  
+- **CPI-U (All Urban Consumers, All Items)** – US Consumer Price Index ([FRED](https://fred.stlouisfed.org/series/CPIAUCSL))  
 
----
-
-## Model Notation
-
-- $B_t$ : Bitcoin price  
-- $G_t$ : Gold price  
-- $S_t$ : S&P500 index  
-- $D_t$ : US Dollar Index (DXY)  
-- $\pi_t$ : CPI (inflation measure)  
-- $r_t$ : Federal Funds Rate  
-
----
-
-## Data Coverage
-
-- Period: **01.01.2015 – 01.07.2025**  
+**Data coverage:**  
+- Period: **2015M01 – 2025M07**  
 - Frequency: **Monthly observations**  
-- Sources: **Investing.com** (BTC, Gold, S&P500, DXY) and **FRED** (FEDFUNDS, CPI-U)  
+- Sources: [Investing.com](https://www.investing.com) (BTC, Gold, S&P500, DXY) and [FRED](https://fred.stlouisfed.org) (CPI-U, Fed Funds Rate)  
+- Number of observations: **127 monthly entries**  
 
 ---
 
-## Main Findings
+## Methodology
 
-- **OLS Analysis**:  
-  - ΔSPX has a strong, statistically significant effect on ΔBTC/USD.  
-  - Other variables (Gold, CPI, DXY, FEDFUNDS) have weaker or heterogeneous effects.  
-  - Homoskedasticity and autocorrelation issues were detected, corrected with **White and Newey–West robust errors**.  
+1. **Descriptive Statistics & Visualization**  
+   - Summary statistics, variance, skewness, kurtosis.  
+   - Time-series plots with trend inspection.  
 
-- **Machine Learning (Random Forest)**:  
-  - Feature importance confirms SPX as the strongest driver of Bitcoin returns.  
-  - PDP/ICE plots show positive non-linear response to SPX, while effects of CPI, Gold, DXY, and FEDFUNDS remain weaker.  
+2. **OLS Regression**  
+   - Estimation of ΔBTC/USD on macro variables.  
+   - Tests of Gauss-Markov assumptions:  
+     - Linearity ($y = X\beta + \varepsilon$)  
+     - No perfect multicollinearity ($X'X$ invertible)  
+     - Exogeneity ($E[\varepsilon|X] = 0$)  
+     - Homoskedasticity ($Var(\varepsilon|X) = \sigma^2 I$)  
+     - No autocorrelation ($Cov(\varepsilon_t, \varepsilon_s)=0, \; t \neq s$)  
+   - Robust standard errors (White HC1, Newey–West HAC) applied when needed.  
+
+3. **Correlation Analysis**  
+   - BTC vs SPX levels: extremely high correlation ($\rho \approx 0.94$).  
+   - BTC vs SPX log-returns: moderate correlation ($\rho \approx 0.24 – 0.36$).  
+   - Rolling correlation plots show time-varying dependence.  
+
+4. **Granger Causality**  
+   - Tested whether SPX returns predict BTC returns.  
+   - Across 1–6 lags, **no statistical evidence of causality** (p-values > 0.05).  
+   - Interpretation: BTC and SPX co-move due to common risk sentiment rather than direct causal link.  
+
+5. **Machine Learning (Random Forest)**  
+   - Feature importance: ΔSPX strongest driver of ΔBTC/USD.  
+   - PDP/ICE plots:  
+     - ΔSPX shows strong monotonic positive effect.  
+     - ΔCPI-U, ΔDXY, ΔXAU/USD, ΔFEDFUNDS show weak or unstable patterns.  
+
+6. **Error & Robustness Checks**  
+   - Residual distribution histograms (fat-tailed, non-normal).  
+   - Rolling correlations confirm regime shifts in BTC–SPX relationship.  
+
+---
+
+## Key Findings
+
+- **BTC behaves more like a “risk-on” asset**, strongly tied to equity markets rather than inflation, interest rates, or gold.  
+- **SPX returns (ΔSPX) are the only robust driver** of Bitcoin returns across both econometric and machine learning frameworks.  
+- The co-movement in levels is trend-driven; short-term dynamics reveal only moderate dependence.  
+- Granger causality confirms **no predictive causal effect** from SPX to BTC.  
+- Machine learning methods (Random Forest, PDP/ICE) complement OLS by capturing **non-linear effects** and enhancing interpretability.  
 
 ---
 
 ## License
-This project is licensed under the **MIT License** – free to use, modify, and distribute with attribution.
+This project is licensed under the **MIT License** – free to use, modify, and distribute with attribution.  
