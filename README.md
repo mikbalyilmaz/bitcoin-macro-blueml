@@ -72,4 +72,4 @@ We begin by testing the **Gauss-Markov assumptions** to assess whether Ordinary 
 ---
 
 ## License
-This project is licensed under the **MIT License** – free to use, modify, and distribute with attribution.  
+ © This project is licensed under the **MIT License** – free to use, modify, and distribute with attribution.
