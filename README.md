@@ -73,3 +73,18 @@ We begin by testing the **Gauss-Markov assumptions** to assess whether Ordinary 
 
 ## License
  © This project is licensed under the **MIT License** – free to use, modify, and distribute with attribution.
+
+---
+
+## Future Methodological Improvements
+
+This project is still under development. To strengthen the econometric and machine learning analysis, the following methodological extensions are planned:
+
+- **Time Series Cross-Validation:** Apply rolling-origin or expanding window validation to avoid information leakage in machine learning models.  
+- **Lag Structures:** Incorporate lagged values of explanatory variables (e.g., 1–3 months) to address simultaneity and endogeneity issues.  
+- **Cointegration & VECM:** Test for long-run relationships among I(1) variables using Johansen/Engle–Granger methods and estimate Vector Error Correction Models if cointegration exists.  
+- **Structural Breaks:** Investigate regime shifts (e.g., policy changes, crises) using Bai–Perron multiple break tests or Markov-switching models.  
+- **Robust Inference:** Complement Newey–West estimators with alternative HAC settings, bootstrap p-values, and quantile regression for heavy-tailed distributions.  
+- **Feature Engineering:** Add volatility measures (rolling variance, GARCH), macro regime indicators, and crypto-specific variables (e.g., network activity).  
+- **Model Comparison:** Evaluate OLS, VAR/VECM, and Random Forest forecasts using Diebold–Mariano tests to compare predictive accuracy.  
+- **Explainability:** Move beyond impurity-based feature importance toward permutation importance and SHAP values for more reliable interpretation.  
