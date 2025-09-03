@@ -1,4 +1,6 @@
-# Gauss-Markov-BTC-Analysis
+# Gauss-Markov-BTC-Analysis  
+[![View Project](https://img.shields.io/badge/View_Project-517FF7)](https://github.com/mikbalyilmaz/Gauss-Markov-BTC-Analysis)  
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)  
 
 This project combines **econometric methods** and **machine learning approaches** to analyze the relationship between **Bitcoin (BTC/USD)** and key macro-financial variables.  
 
@@ -88,3 +90,25 @@ This project is still under development. To strengthen the econometric and machi
 - **Feature Engineering:** Add volatility measures (rolling variance, GARCH), macro regime indicators, and crypto-specific variables (e.g., network activity).  
 - **Model Comparison:** Evaluate OLS, VAR/VECM, and Random Forest forecasts using Diebold–Mariano tests to compare predictive accuracy.  
 - **Explainability:** Move beyond impurity-based feature importance toward permutation importance and SHAP values for more reliable interpretation.  
+
+---
+
+## How to Cite  
+
+If you want to cite this repository in your work, please cite it as:  
+
+> Yılmaz, M. İ. (2025). *Gauss-Markov-BTC-Analysis*. GitHub. https://github.com/mikbalyilmaz/Gauss-Markov-BTC-Analysis  
+
+**APA citation:**  
+Yılmaz, M. İ. (2025). *Gauss-Markov-BTC-Analysis*. GitHub. Retrieved September 3, 2025, from https://github.com/mikbalyilmaz/Gauss-Markov-BTC-Analysis  
+
+**BibTeX:**  
+
+```bibtex
+@misc{gauss_markov_btc_2025,
+  author       = {Muhammed İkbal Yılmaz},
+  title        = {Gauss-Markov-BTC-Analysis},
+  year         = {2025},
+  howpublished = {\url{https://github.com/mikbalyilmaz/Gauss-Markov-BTC-Analysis}},
+  note         = {Accessed: 2025-09-03}
+}
