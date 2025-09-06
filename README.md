@@ -2,9 +2,9 @@
 [![View Project](https://img.shields.io/badge/View_Project-517FF7)](https://github.com/mikbalyilmaz/Gauss-Markov-BTC-Analysis)  
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)  
 
-This project combines **econometric methods** and **machine learning approaches** to analyze the relationship between **Bitcoin (BTC/USD)** and key macro-financial variables.  
+This project integrates **econometric techniques** and **machine learning approaches** to analyze the relationship between **Bitcoin (BTC/USD)** and major macro-financial variables.  
 
-We begin by testing the **Gauss-Markov assumptions** to assess whether Ordinary Least Squares (OLS) estimators can be considered **BLUE (Best Linear Unbiased Estimators)**. When these conditions fail, we extend the analysis with **Random Forest regression**, **Partial Dependence Plots (PDP/ICE)**, and additional time-series correlation methods.  
+We begin by testing the **Gauss–Markov assumptions** to assess whether OLS estimators can be considered **BLUE (Best Linear Unbiased Estimators)**. When these assumptions fail, the analysis is extended with **Random Forest regression**, **Partial Dependence Plots (PDP/ICE)**, and additional time-series methods.  
 
 ---
 
@@ -15,87 +15,76 @@ We begin by testing the **Gauss-Markov assumptions** to assess whether Ordinary 
 - **S&P500 (SPX)** – [Investing.com](https://www.investing.com)  
 - **US Dollar Index (DXY)** – [Investing.com](https://www.investing.com)  
 - **Federal Funds Effective Rate (FEDFUNDS)** – [FRED](https://fred.stlouisfed.org/series/FEDFUNDS)  
-- **CPI-U (All Urban Consumers, All Items)** – [U.S. Bureau of Labor Statistics (BLS)](https://www.bls.gov/cpi/)    
+- **CPI-U (All Urban Consumers, All Items)** – [BLS](https://www.bls.gov/cpi/)    
 
 **Data coverage:**  
 - Period: **2015M01 – 2025M07**  
-- Frequency: **Monthly observations**  
-- Sources: [Investing.com](https://www.investing.com) (BTC, Gold, S&P500, DXY) and [FRED](https://fred.stlouisfed.org) (CPI-U, Fed Funds Rate)  
-- Number of observations: **127 monthly entries**  
+- Frequency: **Monthly**  
+- Sources: [Investing.com](https://www.investing.com), [FRED](https://fred.stlouisfed.org)  
+- Observations: **127 monthly entries**  
 
 ---
 
 ## Methodology
 
 1. **Descriptive Statistics & Visualization**  
-   - Summary statistics, variance, skewness, kurtosis.  
+   - Summary stats, variance, skewness, kurtosis.  
    - Time-series plots with trend inspection.  
 
 2. **OLS Regression**  
-   - Estimation of ΔBTC/USD on macro variables.  
-   - Tests of Gauss-Markov assumptions:  
-     - Linearity ($y = X\beta + \varepsilon$)  
-     - No perfect multicollinearity ($X'X$ invertible)  
-     - Exogeneity ($E[\varepsilon|X] = 0$)  
-     - Homoskedasticity ($Var(\varepsilon|X) = \sigma^2 I$)  
-     - No autocorrelation ($Cov(\varepsilon_t, \varepsilon_s)=0, \; t \neq s$)  
-   - Robust standard errors (White HC1, Newey–West HAC) applied when needed.  
+   - Regression of ΔBTC/USD on macro variables.  
+   - Gauss–Markov tests: linearity, multicollinearity, exogeneity, homoskedasticity, autocorrelation.  
+   - Robust errors (White HC1, Newey–West HAC) applied when needed.  
 
 3. **Correlation Analysis**  
-   - BTC vs SPX levels: extremely high correlation ($\rho \approx 0.94$).  
-   - BTC vs SPX log-returns: moderate correlation ($\rho \approx 0.24 – 0.36$).  
+   - BTC vs SPX levels: strong correlation (\(\rho \approx 0.94\)).  
+   - BTC vs SPX returns: moderate correlation (\(\rho \approx 0.24 – 0.36\)).  
    - Rolling correlation plots show time-varying dependence.  
 
 4. **Granger Causality**  
-   - Tested whether SPX returns predict BTC returns.  
-   - Across 1–6 lags, **no statistical evidence of causality** (p-values > 0.05).  
-   - Interpretation: BTC and SPX co-move due to common risk sentiment rather than direct causal link.  
+   - Tested predictive power of SPX returns on BTC returns.  
+   - No significant causality (p > 0.05).  
+   - Interpretation: co-movement driven by risk sentiment, not causality.  
 
 5. **Machine Learning (Random Forest)**  
-   - Feature importance: ΔSPX strongest driver of ΔBTC/USD.  
-   - PDP/ICE plots:  
-     - ΔSPX shows strong monotonic positive effect.  
-     - ΔCPI-U, ΔDXY, ΔXAU/USD, ΔFEDFUNDS show weak or unstable patterns.  
+   - Feature importance: ΔSPX is the dominant driver.  
+   - PDP/ICE plots reveal strong monotonic effects for ΔSPX, weaker patterns for others.  
 
-6. **Error & Robustness Checks**  
-   - Residual distribution histograms (fat-tailed, non-normal).  
-   - Rolling correlations confirm regime shifts in BTC–SPX relationship.  
+6. **Robustness Checks**  
+   - Residual histograms: fat tails, non-normality.  
+   - Rolling correlations confirm regime shifts.  
 
 ---
 
 ## Key Findings
 
-- **BTC behaves more like a “risk-on” asset**, strongly tied to equity markets rather than inflation, interest rates, or gold.  
-- **SPX returns (ΔSPX) are the only robust driver** of Bitcoin returns across both econometric and machine learning frameworks.  
-- The co-movement in levels is trend-driven; short-term dynamics reveal only moderate dependence.  
-- Granger causality confirms **no predictive causal effect** from SPX to BTC.  
-- Machine learning methods (Random Forest, PDP/ICE) complement OLS by capturing **non-linear effects** and enhancing interpretability.  
+- **BTC acts as a “risk-on” asset**, highly tied to equity markets rather than inflation, interest rates, or gold.  
+- **SPX returns are the only consistent driver** of BTC returns across both OLS and ML models.  
+- Co-movement in levels is trend-driven, while short-term dynamics show moderate dependence.  
+- No evidence of Granger causality from SPX to BTC.  
+- ML methods enhance OLS by capturing **non-linearities** and improving interpretability.  
 
 ---
 
 ## License
- © This project is licensed under the **MIT License** – free to use, modify, and distribute with attribution.
+ © Licensed under the **MIT License** – free to use, modify, and distribute with attribution.  
 
 ---
 
-## Future Methodological Improvements
+## Future Improvements
 
-This project is still under development. To strengthen the econometric and machine learning analysis, the following methodological extensions are planned:
-
-- **Time Series Cross-Validation:** Apply rolling-origin or expanding window validation to avoid information leakage in machine learning models.  
-- **Lag Structures:** Incorporate lagged values of explanatory variables (e.g., 1–3 months) to address simultaneity and endogeneity issues.  
-- **Cointegration & VECM:** Test for long-run relationships among I(1) variables using Johansen/Engle–Granger methods and estimate Vector Error Correction Models if cointegration exists.  
-- **Structural Breaks:** Investigate regime shifts (e.g., policy changes, crises) using Bai–Perron multiple break tests or Markov-switching models.  
-- **Robust Inference:** Complement Newey–West estimators with alternative HAC settings, bootstrap p-values, and quantile regression for heavy-tailed distributions.  
-- **Feature Engineering:** Add volatility measures (rolling variance, GARCH), macro regime indicators, and crypto-specific variables (e.g., network activity).  
-- **Model Comparison:** Evaluate OLS, VAR/VECM, and Random Forest forecasts using Diebold–Mariano tests to compare predictive accuracy.  
-- **Explainability:** Move beyond impurity-based feature importance toward permutation importance and SHAP values for more reliable interpretation.  
+- **Time Series Cross-Validation** (rolling/expanding windows).  
+- **Lag Structures** (1–3 months).  
+- **Cointegration & VECM** (Johansen/Engle–Granger).  
+- **Structural Break Tests** (Bai–Perron, Markov-switching).  
+- **Robust Inference** (bootstrap, quantile regression).  
+- **Feature Engineering** (volatility, macro regimes, crypto metrics).  
+- **Model Comparison** (Diebold–Mariano tests).  
+- **Explainability** (permutation importance, SHAP values).  
 
 ---
 
 ## How to Cite  
-
-If you want to cite this repository in your work, please cite it as:  
 
 > Yılmaz, M. İ. (2025). *Gauss-Markov-BTC-Analysis*. GitHub. https://github.com/mikbalyilmaz/Gauss-Markov-BTC-Analysis  
 
