@@ -1,0 +1,263 @@
+\documentclass[11pt,a4paper]{article}
+
+% Typeface: XeLaTeX with Latin Modern Roman (fontspec default), British English
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage[variant=british]{english}
+
+% Page: the measures of the note template (A4, 11 pt, 4.5 cm side margins, header and page count)
+\usepackage[a4paper,left=4.5cm,right=4.5cm,top=4.5cm,bottom=4.1cm,headheight=14pt,headsep=0.55cm,
+  footskip=0.55cm]{geometry}
+\linespread{0.946}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textbf{PROJECT NOTE} $|$ bitcoin-macro-blueml}
+\fancyhead[R]{\small\textbf{Compiled on:} \notedate}
+\fancyfoot[C]{\small\thepage\,/\,\pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\setlist{noitemsep, topsep=3pt, leftmargin=*}
+\usepackage{xcolor}
+\definecolor{secblue}{HTML}{1F3A5F}
+\definecolor{boxback}{HTML}{EEF2F6}
+\definecolor{mark}{HTML}{9B2226}
+\definecolor{hl}{HTML}{FFF36B}
+% highlighter: each word in a yellow box, line breaks allowed between words
+\makeatletter
+\def\hl#1{{\setlength{\fboxsep}{0.4pt}\hl@word#1 \@nil}}
+\def\hl@word#1 #2\@nil{\colorbox{hl}{\strut #1}%
+  \if\relax\detokenize{#2}\relax\else\colorbox{hl}{\strut\ }\allowbreak\hl@word#2\@nil\fi}
+\makeatother
+\usepackage{titlesec}
+\titleformat{\section}{\color{secblue}\bfseries\normalsize}{\thesection.}{0.4em}{}
+\titlespacing*{\section}{0pt}{10pt}{4pt}
+\usepackage[most]{tcolorbox}
+\newtcolorbox{notebox}[1]{colback=boxback, colframe=secblue, boxrule=0.5pt, arc=0pt, left=4pt, right=4pt,
+  top=3pt, bottom=3pt, fonttitle=\bfseries\color{secblue}, coltitle=secblue, colbacktitle=boxback,
+  title={#1}, toptitle=1pt, bottomtitle=0pt}
+\usepackage[font=small,labelfont=bf,labelsep=period,skip=4pt]{caption}
+\usepackage[bottom]{footmisc}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlength{\textfloatsep}{10pt}
+\emergencystretch=3em
+\newcommand{\name}[1]{\textcolor{mark}{\textbf{#1}}}
+\newcommand{\widefig}[1]{\includegraphics[width=\textwidth]{#1}}
+
+\newcommand{\notedate}{\number\day\space\ifcase\month\or January\or February\or March\or April\or May\or June\or
+  July\or August\or September\or October\or November\or December\fi\space\number\year}
+
+\renewcommand{\topfraction}{0.85}\renewcommand{\bottomfraction}{0.7}\renewcommand{\textfraction}{0.1}\renewcommand{\floatpagefraction}{0.8}
+\input{numbers.tex}
+
+\begin{document}
+
+\vspace*{14pt}
+\begin{tabular}{@{}p{2.35cm}@{}p{\dimexpr\textwidth-2.35cm}@{}}
+\textbf{TITLE:} & \textbf{\large When is OLS BLUE? The Gauss--Markov assumptions in a regression of Bitcoin on
+macro-financial variables}\\[3pt]
+\textbf{SUBJECT:} & Aim, method and results of version 2 of the \texttt{bitcoin-macro-blueml} repository, an
+application of undergraduate econometrics\\[3pt]
+\textbf{AUTHOR:} & Muhammed İkbal Yılmaz (myucanlar@gmail.com)
+\end{tabular}
+
+\vspace{8pt}
+\textbf{Key finding.} Version 1 regressed the monthly change of the Bitcoin price in US dollars on changes of gold,
+the S\&P 500, the dollar index, consumer prices and the federal funds rate, and found that OLS is not BLUE. With
+the same data, \hl{the failure comes from the form of the variables, not from Bitcoin}: in dollar changes the error
+variance grows with the price level (Breusch--Pagan $p = \BpOneP$, White $p = \WhiteOneP$) and the residuals are
+autocorrelated (Breusch--Godfrey $p = \BgTwoOneP$); in log returns none of the checks rejects its assumption. A
+random forest that explains \InRfOne{} of the variance in sample explains none of it in new months.
+
+\section{Data and design}
+
+\begin{itemize}
+\item \textbf{Data.} The file of version 1: \Months{} months, January 2015 to July 2025, Bitcoin, gold,
+the S\&P 500 and the dollar index (Investing.com), the effective federal funds rate (FRED) and the CPI-U
+(FRED, BLS).\footnote{As named by version 1 (for the CPI-U, FRED in its notebook, BLS in its README); the daily value that
+stands for a month was not recorded. The first date, 2015-01-01 04:50:10, is read as January 2015.}
+\item \textbf{Model.} $y_t = \beta_0 + \beta_1 g_t + \beta_2 s_t + \beta_3 d_t + \beta_4 \pi_t + \beta_5 r_t + u_t$
+for Bitcoin ($y$), gold ($g$), the S\&P 500 ($s$), the dollar index ($d$), consumer prices ($\pi$) and the federal
+funds rate ($r$), \Nobs{} months. \textbf{Version 1:} first differences of the levels, $\Delta x_t = x_t - x_{t-1}$.
+\textbf{Version 2:} log returns in per cent, $100(\ln P_t - \ln P_{t-1})$, for Bitcoin, gold, the S\&P 500 and the
+dollar index; monthly inflation $100(\ln \mathrm{CPI}_t - \ln \mathrm{CPI}_{t-1})$; the change of the federal funds
+rate in percentage points.
+\end{itemize}
+
+\begin{notebox}{BOX: THE GAUSS--MARKOV THEOREM}
+In $y = X\beta + u$, assume (A1) linearity in $\beta$, (A2) full
+column rank of $X$, (A3) $E[u \mid X] = 0$ and (A4) $\mathrm{Var}(u \mid X) = \sigma^2 I$: constant variance and no
+correlation across months. Then $b = (X'X)^{-1}X'y$ has $E[b] = \beta$ and $\mathrm{Var}(b) = \sigma^2 (X'X)^{-1}$.
+For any other estimator $\tilde b = Cy$ that is linear in $y$ and unbiased, $\mathrm{Var}(\tilde b) - \mathrm{Var}(b)$
+is positive semi-definite: OLS is the \emph{best linear unbiased estimator}. Normality of $u$ is not needed; it makes
+$t$ and $F$ exact in small samples.
+\end{notebox}
+
+\section{Analysis 1: the data and the form of the variables (Figure~\ref{fig:data})}
+
+\textbf{Why.} The theorem concerns a linear model with constant error variance, so the form in which the variables
+enter decides whether A4 can hold.
+
+\textbf{Method.} ADF and Phillips--Perron unit-root tests (version 1's tests) on levels, differences and returns.
+
+\begin{figure}[!htb]
+\widefig{../figures/fig1_data.pdf}
+\caption{(a) Bitcoin and the S\&P 500, January 2015 = 100, log scale. (b) Version 1's dependent variable, the monthly
+change of Bitcoin in thousand US dollars. (c) Version 2's dependent variable, the monthly log return in per cent.}
+\label{fig:data}
+\end{figure}
+
+\textbf{Finding.} Bitcoin rose from \BtcFirst{} to \BtcLast{} dollars (+\BtcGrowth\%), the S\&P 500 from \SpxFirst{} to
+\SpxLast{} (+\SpxGrowth\%). ADF rejects a unit root in no level ($p \ge \LevelAdfPmin$) and in every log return ($p$
+\RetAdfPmax). The levels of Bitcoin and the S\&P 500 correlate at \CorrLevels, their returns at \CorrReturns: two
+trending series correlate whether or not they are related (Granger and Newbold, 1974). The change of the CPI is
+ambiguous: ADF does not reject a unit root ($p = \CpiDiffAdfP$, with \InflAdfLags{} lags chosen by AIC for a series
+that is not seasonally adjusted), Phillips--Perron does ($p$ \CpiDiffPpP).
+
+\textit{Interpretation.} Panel (b) shows the problem before any test: a dollar change of Bitcoin in 2015 is measured
+in tens of dollars, in 2024 in tens of thousands. Panel (c) has the same scale throughout.
+
+\section{Analysis 2: the assumptions, one by one (Figure~\ref{fig:res}, Tables~\ref{tab:gm} and \ref{tab:coef})}
+
+\textbf{Method.} A1: Ramsey's RESET adds $\hat y^2$ and $\hat y^3$ and tests them with $F$. A2: variance inflation
+factors, $\mathrm{VIF}_j = 1/(1-R_j^2)$. A4, constant variance: Breusch--Pagan regresses $\hat u_t^2$ on the
+regressors, White also on their squares and products; both use $nR^2 \sim \chi^2$. A4, no autocorrelation:
+Breusch--Godfrey regresses $\hat u_t$ on the regressors and $\hat u_{t-1},\dots,\hat u_{t-p}$, $nR^2 \sim \chi^2_p$;
+Durbin--Watson $\sum(\hat u_t - \hat u_{t-1})^2/\sum \hat u_t^2$ looks only at the first lag and its bounds leave
+an inconclusive region. A3 has
+no test: it concerns the unobserved $u$. Robust standard errors: White,
+$\widehat{\mathrm{Var}}(b) = \frac{n}{n-k}(X'X)^{-1}\big(\sum_t \hat u_t^2 x_t x_t'\big)(X'X)^{-1}$, and Newey--West with
+2 lags as in version 1.
+
+\begin{table}[!htb]
+\centering\small
+\caption{Checks of the Gauss--Markov assumptions, \Nobs{} months. Statistic and $p$-value.}\label{tab:gm}
+\begin{tabular}{llrrrr}
+\toprule
+ & & \multicolumn{2}{c}{Version 1: differences} & \multicolumn{2}{c}{Version 2: returns} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}
+ & Test & stat. & $p$ & stat. & $p$ \\
+\midrule
+\input{tab_assumptions.tex}
+\end{tabular}
+\end{table}
+
+\begin{figure}[!htb]
+\widefig{../figures/fig2_residuals.pdf}
+\caption{Residuals of the two regressions. (a), (b) Against the Bitcoin price of the previous month (log scale).
+(c), (d) Autocorrelations; grey band $\pm 1.96/\sqrt{n}$.}\label{fig:res}
+\end{figure}
+
+\textbf{Finding.} In version 1's form, A4 fails twice: the error variance depends on the regressors (Breusch--Pagan
+$p = \BpOneP$, White $p = \WhiteOneP$), and the absolute residual rises with last month's Bitcoin price (rank
+correlation \RhoOne, $p$ \RhoOneP); the residuals are autocorrelated (Breusch--Godfrey $p = \BgTwoOneP$ with two
+lags, \BgSixOneP{} with six). In version 2's form neither part of A4 is rejected (Breusch--Pagan $p = \BpTwoP$, White
+\WhiteTwoP, Breusch--Godfrey \BgTwoTwoP{} and \BgSixTwoP), nor A1 (RESET $p = \ResetTwoP$); the rank correlation with
+the price is \RhoTwo{} ($p = \RhoTwoP$). Collinearity is no issue in either form (largest VIF \VifOne{} and \VifTwo).
+Normality is rejected for version 1 (Jarque--Bera $p$ \JbOneP) but not for version 2 ($p = \JbTwoP$).
+
+\begin{table}[!htb]
+\centering\small
+\caption{Version 2: coefficients with classical, White (HC1) and Newey--West (2 lags) standard errors; $p$-value with
+White standard errors. $R^2 = \RsqTwo$.}\label{tab:coef}
+\setlength{\tabcolsep}{4pt}\begin{tabular}{lrrrrr}
+\toprule
+ & coef. & classical & White & Newey--West & $p$ \\
+\midrule
+\input{tab_coefficients.tex}
+\end{tabular}
+\end{table}
+
+\textit{Interpretation.} With A1, A2 and A4 not rejected, OLS on returns is BLUE provided A3 holds. Only the S\&P 500
+matters: a month in which its log return is 1 point higher goes with a Bitcoin log return \SpxTwo{} points higher (White s.e.\ \SpxTwoSeHc);
+the other variables have $p \ge \OthersTwoPmin$. The three standard errors differ little, as expected when A4 holds.
+
+\section{Analysis 3: what BLUE means, in a simulation (Figure~\ref{fig:sim})}
+
+\textbf{Method.} The regressors of version 2 are held fixed, $\beta$ and $\sigma$ are set to their estimates, and
+\SimReps{} samples $y = X\beta + u$ are drawn under (A) $u_t \sim N(0,\sigma^2)$ and (B)
+$\mathrm{Var}(u_t) \propto 0.25 + z_t^2$, $z_t$ the standardised S\&P 500 return, with the same average variance.
+Two linear unbiased estimators of $\beta_2$ are compared: OLS and weighted least squares,
+$b_W = (X'WX)^{-1}X'Wy$ with $W = \mathrm{diag}\{1/(0.25 + z_t^2)\}$, which is generalised least squares under B.
+
+\begin{figure}[!htb]
+\widefig{../figures/fig3_simulation.pdf}
+\caption{(a), (b) Distribution of the OLS and WLS estimates of the S\&P 500 coefficient under A and B; red: true
+value \SimTrue. (c) Share of samples in which the 95\% interval of OLS contains the true value.}\label{fig:sim}
+\end{figure}
+
+\textbf{Finding.} Both estimators are unbiased under both laws (means \SimAMeanOls{} and \SimAMeanWls{} under A,
+\SimBMeanOls{} and \SimBMeanWls{} under B). Under A, OLS has the smaller standard deviation (\SimAOls{} against
+\SimAWls), as the theorem says. Under B, WLS does (\SimBWls{} against \SimBOls), and the classical 95\% interval of OLS
+contains the true value in only \SimBCl\% of samples; White's interval in \SimBHc\%.
+
+\textit{Interpretation.} A failure of A4 does not bias OLS; it makes it inefficient and its classical standard
+errors wrong. White's standard errors repair most, not all, of the coverage in a sample of this size.
+
+\section{Analysis 4: the random forest (Figure~\ref{fig:rf})}
+
+\textbf{Method.} Version 1's forest (500 trees, fully grown, seed 42) and OLS, first on all months, then for each of
+the last \TestMonths{} months (\TestFirst{} to \TestLast) fitted on the earlier months only and applied to that
+month: $R^2_{\mathrm{new}} = 1 - \sum(y_t - \hat y_t)^2/\sum(y_t - \bar y_t)^2$, $\bar y_t$ the mean of the earlier
+months.
+
+\begin{figure}[!htb]
+\widefig{../figures/fig4_forest.pdf}
+\caption{$R^2$ of OLS and of the random forest in sample and on months not used in fitting.}\label{fig:rf}
+\end{figure}
+
+\textbf{Finding.} In sample the forest reaches $R^2 = \InRfOne$ (version 1's form) and \InRfTwo{} (returns), against
+\InOlsOne{} and \InOlsTwo{} for OLS. On new months the forest falls to \OutRfOne{} and \OutRfTwo, OLS keeps \OutOlsOne{}
+and \OutOlsTwo.
+
+\textit{Interpretation.} With \Nobs{} months, fully grown trees memorise the sample; the in-sample $R^2$ of version 1
+measured that. The linear model carries over to new months; the forest finds no additional structure.
+
+\section{Conclusions and limitations}
+
+\begin{enumerate}
+\item Whether OLS is BLUE depends on the form of the variables: in dollar changes A4 fails, in log returns it is not
+rejected.
+\item Only the S\&P 500 is related to Bitcoin in the same month; gold, the dollar, inflation and the policy rate are
+not.
+\item A3 cannot be tested. Bitcoin and the S\&P 500 react to the same news in the same month, so the coefficient
+describes co-movement, not the effect of one on the other; version 1's Granger tests find no lead of the S\&P 500
+over Bitcoin ($p \ge \GrangerPmin$ for 1--6 lags).
+\end{enumerate}
+
+\textbf{Scope and verification note.} Every number is written from \texttt{figures/*.csv} by \texttt{make\_paper.py};
+the unit tests check the computations against matrix formulas, auxiliary regressions written out, exact variances
+for the simulation and the printed output of version 1, whose code reproduces it on the stored file. The sample is
+\Nobs{} months; the monthly timing of the source series was not recorded.
+
+\section*{References}
+{\small
+Breiman, L. (2001). Random forests. \textit{Machine Learning}, 45(1), 5--32.\\
+Breusch, T. S. (1978). Testing for autocorrelation in dynamic linear models. \textit{Australian Economic Papers},
+17(31), 334--355.\\
+Breusch, T. S., Pagan, A. R. (1979). A simple test for heteroscedasticity and random coefficient variation.
+\textit{Econometrica}, 47(5), 1287--1294.\\
+Godfrey, L. G. (1978). Testing against general autoregressive and moving average error models when the regressors
+include lagged dependent variables. \textit{Econometrica}, 46(6), 1293--1301.\\
+Granger, C. W. J., Newbold, P. (1974). Spurious regressions in econometrics. \textit{Journal of Econometrics}, 2(2),
+111--120.\\
+Newey, W. K., West, K. D. (1987). A simple, positive semi-definite, heteroskedasticity and autocorrelation consistent
+covariance matrix. \textit{Econometrica}, 55(3), 703--708.\\
+Ramsey, J. B. (1969). Tests for specification errors in classical linear least-squares regression analysis.
+\textit{Journal of the Royal Statistical Society, Series B}, 31(2), 350--371.\\
+White, H. (1980). A heteroskedasticity-consistent covariance matrix estimator and a direct test for
+heteroskedasticity. \textit{Econometrica}, 48(4), 817--838.\\
+Wooldridge, J. M. (2020). \textit{Introductory Econometrics: A Modern Approach} (7th ed.). Cengage.
+
+\smallskip
+An AI coding assistant was used in writing the code and in preparing this note.
+}
+
+\end{document}

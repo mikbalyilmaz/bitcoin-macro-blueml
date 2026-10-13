@@ -1,0 +1,21 @@
+form,assumption,test,statistic,p
+v1,A1 linearity,"RESET, powers 2 and 3",0.5662967033671892,0.5691585476898866
+v1,A2 no collinearity,largest VIF,1.728603802384855,nan
+v1,A2 no collinearity,condition number,2.310562792296497,nan
+v1,A4 constant variance,Breusch-Pagan,11.735362037006727,0.03859948246625666
+v1,A4 constant variance,White,36.70051118343966,0.012707680808596257
+v1,A4 no autocorrelation,"Breusch-Godfrey, 2 lags",9.595216574147829,0.00824945379846525
+v1,A4 no autocorrelation,"Breusch-Godfrey, 6 lags",17.140518163176857,0.008780458587873458
+v1,A4 no autocorrelation,"Breusch-Godfrey, 12 lags",18.45712716128991,0.10249910422139623
+v1,A4 no autocorrelation,Durbin-Watson,1.6738596282856608,nan
+v1,normality (not A1-A4),Jarque-Bera,107.9185682425001,3.679430963007955e-24
+v2,A1 linearity,"RESET, powers 2 and 3",1.0420712875624356,0.3559462357290927
+v2,A2 no collinearity,largest VIF,1.6726888070083197,nan
+v2,A2 no collinearity,condition number,2.2266207689474435,nan
+v2,A4 constant variance,Breusch-Pagan,2.0402749243826905,0.8435446419792831
+v2,A4 constant variance,White,13.865237032762593,0.8372624418925112
+v2,A4 no autocorrelation,"Breusch-Godfrey, 2 lags",1.7308750900552756,0.4208673639124567
+v2,A4 no autocorrelation,"Breusch-Godfrey, 6 lags",1.7607459544648314,0.9403359015338961
+v2,A4 no autocorrelation,"Breusch-Godfrey, 12 lags",9.631027146597159,0.6482946234722353
+v2,A4 no autocorrelation,Durbin-Watson,1.7771966259666387,nan
+v2,normality (not A1-A4),Jarque-Bera,5.065021011777378,0.07945928666749975
